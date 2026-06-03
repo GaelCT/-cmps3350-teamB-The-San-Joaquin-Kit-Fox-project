@@ -13,7 +13,7 @@ I want to learn more about backend development.
 I haven't had a concha in a long time. The only time I have gotten one was in a bakery in Delano. My favorite place right now to get pastries is at Claveria in Delano. 
 
 ## Preferred communcation style
-I prefer daily updates (it doesn't have to be at a certain time, but at least once a day) and list the things they have done and haven't done.
+Discord. Email if I'm not replying on discord and it's urgent for a reply (amiranda21@csub.edu).
 
 ## Availability
 I am usually available after 10 a.m. everyday, but my work schedule varies. I will try to communicate whenever I can throughout the day.
