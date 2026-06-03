@@ -14,3 +14,6 @@ I haven't had a concha in a long time. The only time I have gotten one was in a 
 
 ## Preferred communcation style
 I prefer daily updates (it doesn't have to be at a certain time, but at least once a day) and list the things they have done and haven't done.
+
+## Availability
+I am usually available after 10 a.m. everyday, but my work schedule varies. I will try to communicate whenever I can throughout the day.
