@@ -15,3 +15,5 @@ Favorite place to grab conchas would be Superior Grocers
 # Preferred communitcation style
 Discord or email
 
+## Availability
+Always after 7 Pm everyday
