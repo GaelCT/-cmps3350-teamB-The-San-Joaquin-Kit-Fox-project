@@ -11,3 +11,6 @@ APIs software
 
 ## Pastries 
 Panecito y Cafe (they have student discounts)
+
+## Preferred communication style
+Discord (emiliomorado) or Email (ecalderon-patino@csub.edu) 
