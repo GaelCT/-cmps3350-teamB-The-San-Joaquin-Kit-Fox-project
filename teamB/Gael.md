@@ -12,3 +12,6 @@ I want to understand fundmentals better in all my CS classes.
 ## Pastries
 Favorite place to grab conchas would be Superior Grocers
 
+# Preferred communitcation style
+Discord or email
+
