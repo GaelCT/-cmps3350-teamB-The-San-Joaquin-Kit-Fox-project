@@ -13,7 +13,5 @@ Mapping
 Smith's bakery MAPLE BARS!
 
 ## Preferred communication style
-Discord (SCNinja8) or Email (skegley1@csub.edu) 
-
-## Availability
-everyday after 1:00pm 
+Discord: SCNinja8 or 
+Email: skegley1@csub.edu
