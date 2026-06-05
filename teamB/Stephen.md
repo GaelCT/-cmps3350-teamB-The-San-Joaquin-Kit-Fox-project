@@ -15,3 +15,6 @@ Smith's bakery MAPLE BARS!
 ## Preferred communication style
 Discord: SCNinja8 or 
 Email: skegley1@csub.edu
+
+## Availability
+Anytime after 11am.
