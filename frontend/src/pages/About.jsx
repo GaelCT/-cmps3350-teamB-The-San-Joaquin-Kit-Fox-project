@@ -2,10 +2,15 @@ function About() {
   return (
     <section>
       <h2>About</h2>
-      <p>The Kit Fox Tracker is a student software engineering project focused on reporting and reviewing sightings.</p>
-      <p>This version is only a frontend scaffold. It demonstrates page structure, navigation, and deployment.</p>
+      <p>
+        The Kit Fox Tracker is a student software engineering project focused on reporting and reviewing sightings.
+      </p>
+      <p>
+        This version is only a frontend scaffold. It demonstrates page structure, navigation, and deployment.
+      </p>
     </section>
   )
 }
 
+// CRITICAL: This is the line your app is looking for!
 export default About

@@ -1,13 +1,13 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import './index.css'
 import App from './App.jsx'
+import './index.css'
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter basename="/team-2-s26/lab-d-stephen">
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <BrowserRouter basename="/-cmps3350-teamB-The-San-Joaquin-Kit-Fox-project/lab-d-gael">
       <App />
     </BrowserRouter>
-  </StrictMode>,
+  </React.StrictMode>,
 )
