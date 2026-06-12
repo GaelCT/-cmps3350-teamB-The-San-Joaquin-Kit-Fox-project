@@ -3,6 +3,6 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/-cmps3350-teamB-The-San-Joaquin-Kit-Fox-project/lab-d-gael/',
+  base: '/-cmps3350-teamB-The-San-Joaquin-Kit-Fox-project/lab-d-ashley/',
   plugins: [react()],
 })
