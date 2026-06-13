@@ -109,8 +109,3 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
-nav {
-  display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
-}
