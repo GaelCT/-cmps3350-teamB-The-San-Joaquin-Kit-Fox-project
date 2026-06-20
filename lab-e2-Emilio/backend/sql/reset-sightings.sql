@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS sightings;
+
 CREATE TABLE sightings (
   id INT AUTO_INCREMENT PRIMARY KEY,
   observer_name VARCHAR(100) NOT NULL,
