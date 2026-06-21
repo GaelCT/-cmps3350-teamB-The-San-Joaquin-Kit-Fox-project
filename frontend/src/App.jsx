@@ -9,10 +9,10 @@ function App() {
   return (
     <>
       <header>
-        <h1>Kit Fox Tracker</h1>
+        <h1>[ FOX TRAIL ]</h1>
         <nav>
           <Link to="/">Home</Link>
-          <Link to="/submit">Submit Sighting</Link>
+          <Link to="/submit">Submit</Link>
           <Link to="/sightings">Sightings</Link>
           <Link to="/about">About</Link>
         </nav>
