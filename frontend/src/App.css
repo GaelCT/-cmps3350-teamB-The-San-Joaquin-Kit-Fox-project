@@ -7,6 +7,7 @@ header {
   padding: 16px 0;
   margin-bottom: 24px;
 }
+
 header h1 {
   font-size: 18px;
   letter-spacing: 2px;
@@ -20,7 +21,10 @@ header nav a {
 }
 header nav a:hover { text-decoration: underline; }
 
-main { padding-bottom: 60px; }
+main {
+  padding-top: 30px;
+  padding-bottom: 60px;
+}
 
 /* ===== Buttons ===== */
 .btn {
@@ -29,8 +33,9 @@ main { padding-bottom: 60px; }
   font-size: 14px;
   padding: 12px 20px;
   border: 1px solid var(--line-strong);
-  background: var(--paper);
-  color: var(--ink);
+  background: #7ea172;
+  color: white;
+  border: none;
   text-decoration: none;
   cursor: pointer;
 }
@@ -42,21 +47,32 @@ main { padding-bottom: 60px; }
 
 /* ===== Page intro ===== */
 .page-intro {
-  border-bottom: 2px solid var(--line-strong);
-  padding-bottom: 12px;
-  margin-bottom: 20px;
+  background: var(--color-bg-light) !important;
+  border-radius: 24px;
+  padding: 40px;
 }
-.page-intro p { color: var(--muted); margin: 0; }
+
+.page-intro h1,
+.page-intro h2 {
+  color: #2b241f;
+}
+
+.page-intro p {
+  color: #5a5149 !important;
+}
 
 /* ===== Sections ===== */
 .section-label {
-  font-size: 12px;
-  letter-spacing: 1px;
-  color: var(--muted);
-  border-left: 3px solid var(--line-strong);
-  padding-left: 8px;
-  margin: 32px 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #7ea172;
+  border-left: 5px solid #7ea172;
+  padding-left: 12px;
+  margin: 40px 0 16px;
+  text-transform: uppercase;
 }
+
 .note {
   font-size: 12px;
   color: var(--muted);
@@ -117,7 +133,11 @@ main { padding-bottom: 60px; }
   background: var(--paper);
   color: var(--ink);
 }
-.sort-group { display: flex; gap: 0; }
+.sort-group {
+  display: flex;
+  gap: 12px;
+}
+
 .sort-btn {
   font-family: var(--mono);
   font-size: 12px;
