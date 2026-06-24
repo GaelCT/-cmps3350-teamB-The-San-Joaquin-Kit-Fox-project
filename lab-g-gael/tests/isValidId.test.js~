@@ -1,0 +1,35 @@
+mport { isValidId } from '../src/isValidId.js'
+
+describe('isValidId', () => {
+
+	  test('returns true for positive integer strings', () => {
+		      expect(isValidId('3')).toBe(true)
+		      expect(isValidId('123')).toBe(true)
+		    })
+
+	  test('returns false for zero', () => {
+		      expect(isValidId('0')).toBe(false)
+		      expect(isValidId(0)).toBe(false)
+		    })
+
+	  test('returns false for negative numbers', () => {
+		      expect(isValidId('-1')).toBe(false)
+		      expect(isValidId(-1)).toBe(false)
+		    })
+
+	  test('returns false for decimals', () => {
+		      expect(isValidId('2.5')).toBe(false)
+		      expect(isValidId(3.14)).toBe(false)
+		    })
+
+	  test('returns false for non-numeric strings', () => {
+		      expect(isValidId('abc')).toBe(false)
+		      expect(isValidId('')).toBe(false)
+		    })
+
+	  test('returns false for NaN and Infinity', () => {
+		      expect(isValidId(NaN)).toBe(false)
+		      expect(isValidId(Infinity)).toBe(false)
+		    })
+
+})
