@@ -1,0 +1,31 @@
+:root {
+  --ink: #111111;
+  --paper: #ffffff;
+  --muted: #666666;
+  --line: #cccccc;
+  --line-strong: #111111;
+  --fill: #f4f4f4;
+  --fill-head: #e8e8e8;
+  --mono: "SF Mono", "DejaVu Sans Mono", "Consolas", ui-monospace, monospace;
+
+  font: 15px/1.5 var(--mono);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; }
+
+#root {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+h1 { font-size: 30px; font-weight: 700; letter-spacing: 1px; margin: 24px 0 4px; }
+h2 { font-size: 22px; font-weight: 700; margin: 0 0 12px; }
+h3 { font-size: 16px; font-weight: 700; margin: 0 0 8px; }
+p  { margin: 0 0 12px; }
+a  { color: var(--ink); }
