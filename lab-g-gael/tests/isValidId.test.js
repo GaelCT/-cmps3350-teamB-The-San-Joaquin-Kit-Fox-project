@@ -1,4 +1,4 @@
-mport { isValidId } from '../src/isValidId.js'
+import { isValidId } from '../src/isValidId.js'
 
 describe('isValidId', () => {
 
