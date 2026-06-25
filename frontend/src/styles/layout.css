@@ -162,10 +162,10 @@ main {
 
 .page-intro {
   border-bottom: none;
-  background: rgba(247, 241, 232, 0.08);
+  background: var(--color-bg-light);
   padding: 28px;
   border-radius: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 40px;
 }
 
 .filter-bar {
@@ -176,6 +176,11 @@ main {
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
 }
 
+.filter-bar label{
+    color: var(--color-text-dark);
+    font-weight:700;
+}
+
 .filter-bar input,
 .filter-bar select {
   border-radius: 10px;
@@ -184,6 +189,28 @@ main {
 
 .sort-btn {
   border-radius: 10px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 28px 0 14px;
+}
+
+.table-header h3 {
+  margin: 0;
+  padding-left: 12px;
+  border-left: 4px solid #7ea172;
+  color: white;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.table-header span {
+  color: #b8b1a5;
+  font-size: 0.95rem;
 }
 
 table {
@@ -198,15 +225,70 @@ thead th {
   color: white;
 }
 
+tbody tr {
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+tbody tr:nth-child(odd) {
+  background: var(--color-bg-light);
+}
+
+tbody tr:nth-child(even) {
+  background: #ece2d2;
+}
+
 tbody tr:hover {
-  background: rgba(126, 161, 114, 0.15);
+  background: rgba(126, 161, 114, 0.18);
+  transform: scale(1.003);
+}
+
+tbody tr:hover .badge {
+  transform: scale(1.08);
 }
 
 td a {
-  color: #5f7d4e;
-  font-weight: 700;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+tbody tr:hover td a {
+  transform: translateX(4px);
+}
+
+td,
+th{
+    padding:18px 22px;
 }
 
 .count-line {
   color: var(--color-bg-light);
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.badge-healthy {
+  background: #7ea172;
+  color: white;
+}
+
+.badge-injured {
+  background: #d8844f;
+  color: white;
+}
+
+.badge-unknown {
+  background: #8a7a68;
+  color: white;
+}
+
+.submit-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  margin-bottom: 20px;
 }
