@@ -1,8 +1,16 @@
+import { useState } from 'react'
+import MapPicker from '../components/MapPicker'
 import { Link } from 'react-router-dom'
 
 // Prototype form only. Fields are placeholders and do NOT save data yet.
 // A later milestone will wire this to the API and persist submissions.
 function SubmitSighting() {
+  const [location, setLocation] = useState({    
+    latitude: '',
+    longitude: '',
+  })
+  
+  
   return (
     <section>
       <div className="page-intro">
@@ -24,13 +32,39 @@ function SubmitSighting() {
         <div className="field">
           <label>Latitude</label>
           <span className="hint">Auto-populated from device GPS if available</span>
-          <input type="text" name="lat" placeholder="[ GPS coordinate placeholder ]" />
+          <input
+            type="text"
+            name="lat"
+            placeholder="[ GPS coordinate placeholder ]"
+            value={location.latitude}
+            onChange={(event) =>
+              setLocation({ ...location, latitude: event.target.value })
+            }
+          />
         </div>
 
         <div className="field">
           <label>Longitude</label>
           <span className="hint">Auto-populated from device GPS if available</span>
-          <input type="text" name="lon" placeholder="[ GPS coordinate placeholder ]" />
+          <input
+            type="text"
+            name="lon"
+            placeholder="[ GPS coordinate placeholder ]"
+            value={location.longitude}
+            onChange={(event) =>
+              setLocation({ ...location, longitude: event.target.value })
+            }
+          />
+        </div>
+
+        <div className="field full">
+          <label>Select Location on Map</label>
+          <span className="hint">Click the map to drop a marker and fill in latitude/longitude.</span>
+          <MapPicker
+            latitude={location.latitude}
+            longitude={location.longitude}
+            onSelectLocation={setLocation}
+          />
         </div>
 
         <div className="field">
