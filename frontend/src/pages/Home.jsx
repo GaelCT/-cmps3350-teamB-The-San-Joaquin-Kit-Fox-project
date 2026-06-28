@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import heroImage from '../assets/full banner kit fox.jpeg'
 
 // Placeholder preview cards for the prototype. A later milestone
 // will populate these from the most recent real sighting records.
@@ -9,21 +10,41 @@ const RECENT = [
 ]
 
 function Home() {
-  return (
-    <section>
-      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+ return (
+  <section>
+    
+    <div
+      className="hero-banner"
+      style={{ backgroundImage: `url(${heroImage})` }}
+    >
+      
+      <div className="hero-content">
+        
         <h1>FOX TRAIL</h1>
-        <p style={{ color: 'var(--muted)', maxWidth: '640px', margin: '0 auto 24px' }}>
-          A San Joaquin Kit Fox Sighting Tracker for wildlife biologists, field
-          technicians, students, and science volunteers monitoring fox
-          populations in California's Central Valley.
+        
+        <p>
+          A San Joaquin Kit Fox Sighting Tracker for wildlife biologists,
+          field technicians, students, and science volunteers monitoring fox
+          populations in California&apos;s Central Valley.
         </p>
-        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-          <Link to="/submit" className="btn btn-primary">[ SUBMIT A SIGHTING ]</Link>
-          <Link to="/sightings" className="btn">View Sightings →</Link>
-          <Link to="/about" className="btn">Learn More →</Link>
+
+        <div className="hero-buttons">
+          
+          <Link to="/submit" className="btn btn-primary">
+            [ SUBMIT A SIGHTING ]
+          </Link>
+          
+          <Link to="/sightings" className="btn">
+            View Sightings →
+          </Link>
+          
+          <Link to="/about" className="btn">
+            Learn More →
+          </Link>
+        
         </div>
       </div>
+    </div>
 
       <p className="section-label">SECTION: MAP PREVIEW</p>
       <p className="note">↘ Map will be built by Person C (Emilio) using Leaflet and OpenStreetMap — placeholder only</p>

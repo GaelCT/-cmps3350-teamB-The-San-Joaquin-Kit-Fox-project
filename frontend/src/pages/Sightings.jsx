@@ -79,43 +79,91 @@ function Sightings() {
           </div>
         </div>
         <button className="btn" onClick={clearFilters}>Clear Filters</button>
+     
+     </div>
+
+      <div className="table-header">
+        
+        <h3>Recorded Sightings</h3>
+
+        <span>
+          Showing {visible.length} of {SIGHTINGS.length} reports
+        </span>
+      
       </div>
 
-      <p className="count-line">Showing {visible.length} of {SIGHTINGS.length} reports</p>
-
       <table>
+        
         <thead>
+        
           <tr>
+
             <th>DATE</th>
+          
             <th>LOCATION</th>
+          
             <th>FOX COUNT</th>
+          
             <th>HEALTH STATUS</th>
+          
             <th>ACTION</th>
+          
           </tr>
+        
         </thead>
+        
         <tbody>
+          
           {visible.map((s) => (
+          
             <tr key={s.id}>
+
               <td>{s.date}</td>
+              
               <td>{s.location}</td>
+
               <td>{s.count}</td>
-              <td><span className="badge">{s.health}</span></td>
+
+              <td>
+                
+                <span className={`badge badge-${s.health.toLowerCase()}`}>
+                  {s.health}
+                
+                </span>
+
+              </td>
+
               <td><Link to="/sightings">View Details →</Link></td>
+            
             </tr>
+          
           ))}
+          
           {visible.length === 0 && (
+            
             <tr>
+            
               <td colSpan="5" style={{ textAlign: 'center', color: 'var(--muted)', padding: '32px' }}>
                 No sightings match the current filters.
               </td>
+            
+            
             </tr>
+
           )}
+      
         </tbody>
+      
       </table>
 
-      <div style={{ marginTop: '24px' }}>
-        <Link to="/submit" className="btn btn-primary">+ Submit a New Sighting</Link>
-      </div>
+     <div className="submit-btn-container">
+      
+      <Link to="/submit" className="btn btn-primary">
+        + Submit a New Sighting
+      </Link>
+    
+    </div>
+    
     </section>
   )
 }
