@@ -1,10 +1,37 @@
 // Prototype form only. Fields are placeholders and do NOT save data yet.
 // A later milestone will wire this to the API and persist submissions.
 
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { createSighting } from '../services/sightingServices'
 
 function SubmitSighting() {
-  
+
+  const navigate = useNavigate()
+  const [message, setMessage] = useState('')
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+
+    const formData = new FormData(e.target)
+
+    const newSighting = {
+      observer_name: 'Ashley',
+      sighting_date: formData.get('date'),
+      location_name: formData.get('location'),
+      health_status: formData.get('health'),
+      notes: formData.get('notes') || null
+    }
+
+    try {
+      await createSighting(newSighting)
+      setMessage('Sighting submitted successfully!')
+      navigate('/sightings')
+    } catch (error) {
+      setMessage('Failed to submit sighting.')
+    }
+  }
+
   return (
     
     <section>
@@ -21,7 +48,7 @@ function SubmitSighting() {
     
       </div>
 
-      <div className="form-card">
+      <form className="form-card" onSubmit={handleSubmit}>
     
         <div className="form-grid">
     
@@ -127,7 +154,11 @@ function SubmitSighting() {
 
         <div className="form-actions">
         
-          <button type="button" className="btn btn-primary">[ SUBMIT ]</button>
+          <button type="submit" className="btn btn-primary">
+            
+            [ SUBMIT ]
+            
+            </button>
         
           <Link to="/" className="btn">Cancel</Link>
         
@@ -139,7 +170,7 @@ function SubmitSighting() {
         
         </p>
       
-      </div>
+      </form>
     
     </section>
 
