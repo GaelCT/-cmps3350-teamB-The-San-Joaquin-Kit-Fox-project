@@ -10,8 +10,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "127.0.0.1";
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+
 
 function isValidId(value) {
   const id = Number(value);
