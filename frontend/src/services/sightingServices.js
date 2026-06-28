@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://bender.cs.csubak.edu/miranda";
+const API_BASE_URL = "http://136.168.201.106:3000";
 
 export async function getSightings() {
   const response = await fetch(`${API_BASE_URL}/sightings`);
