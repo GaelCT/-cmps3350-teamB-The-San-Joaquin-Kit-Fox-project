@@ -1,16 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-
-// Hardcoded example data for the prototype (matches the Figma wireframe).
-// A later milestone will replace this with real records from the API.
-const SIGHTINGS = [
-  { id: 1, date: '2025-04-12', location: 'Near Buttonwillow, CA - SR 58 junction', count: 2, health: 'Healthy' },
-  { id: 2, date: '2025-04-09', location: 'Lokern Natural Area, Kern County',       count: 1, health: 'Injured' },
-  { id: 3, date: '2025-04-06', location: 'Wheeler Ridge, I-5 corridor',            count: 3, health: 'Healthy' },
-  { id: 4, date: '2025-03-30', location: 'Corcoran, Kings County - ag field edge',  count: 1, health: 'Unknown' },
-  { id: 5, date: '2025-03-27', location: 'Elk Hills, western Kern County',          count: 2, health: 'Healthy' },
-  { id: 6, date: '2025-03-21', location: 'Lost Hills, north of Taft',               count: 1, health: 'Unknown' },
-]
+import { getSightings } from '../services/sightingServices'
 
 function Sightings() {
   const [dateFrom, setDateFrom] = useState('')
@@ -18,11 +8,30 @@ function Sightings() {
   const [health, setHealth] = useState('All')
   const [sort, setSort] = useState('newest')
 
+  const [sightings, setSightings] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+  async function loadSightings() {
+    try {
+      const data = await getSightings()
+      setSightings(data)
+    } catch (err) {
+      setError('Could not load sightings from the API.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  loadSightings()
+}, [])
+
   // Filter, then sort. Pure UI logic on hardcoded data — no backend.
-  const visible = SIGHTINGS
-    .filter((s) => (dateFrom ? s.date >= dateFrom : true))
-    .filter((s) => (dateTo ? s.date <= dateTo : true))
-    .filter((s) => (health === 'All' ? true : s.health === health))
+  const visible = sightings
+    .filter((s) => (dateFrom ? s.sighting_date >= dateFrom : true))
+    .filter((s) => (dateTo ? s.sighting_date <= dateTo : true))
+    .filter((s) => (health === 'All' ? true : s.health_status === health))
     .sort((a, b) =>
       sort === 'newest'
         ? b.date.localeCompare(a.date)
@@ -87,7 +96,7 @@ function Sightings() {
         <h3>Recorded Sightings</h3>
 
         <span>
-          Showing {visible.length} of {SIGHTINGS.length} reports
+          Showing {visible.length} of {sightings.length} reports
         </span>
       
       </div>
@@ -118,16 +127,16 @@ function Sightings() {
           
             <tr key={s.id}>
 
-              <td>{s.date}</td>
+              <td>{s.sighting_date}</td>
               
-              <td>{s.location}</td>
+              <td>{s.location_name}</td>
 
               <td>{s.count}</td>
 
               <td>
                 
-                <span className={`badge badge-${s.health.toLowerCase()}`}>
-                  {s.health}
+                <span className={`badge badge-${s.health_status.toLowerCase()}`}>
+                  {s.health_status}
                 
                 </span>
 
