@@ -1,0 +1,7 @@
+The old index.php file had a major refactor. From going to a ugly design to a
+cleaner and more maintainable code. The biggest thing that occured was
+switching the major try catch section from being the majority of the code
+within to just being 7 line. A lot of the if else statements that were used to
+verify the operations on CRUD were moved and transitioned into functions that
+were easier to maintain than a large amount of if else statments. This was the
+major refactor that was done to improve clarity on what was occuring.
