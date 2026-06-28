@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://136.168.201.106:3000";
+const API_BASE_URL = "http://localhost:3000";
 
 export async function getSightings() {
   const response = await fetch(`${API_BASE_URL}/sightings`);
