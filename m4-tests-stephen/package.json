@@ -1,0 +1,16 @@
+{
+  "name": "m4-tests-stephen",
+  "version": "1.0.0",
+  "description": "Milestone 4 unit tests for Fox Trail sighting helper logic",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^30.4.2"
+  }
+}
