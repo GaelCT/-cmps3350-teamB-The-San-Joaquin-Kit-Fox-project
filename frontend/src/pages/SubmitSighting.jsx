@@ -1,150 +1,155 @@
-// Prototype form only. Fields are placeholders and do NOT save data yet.
-// A later milestone will wire this to the API and persist submissions.
-
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { API_BASE_URL } from '../api.js'
 
+// Submits a new sighting to the database-backed API via POST.
 function SubmitSighting() {
-  
+  const [observerName, setObserverName] = useState('')
+  const [date, setDate] = useState('')
+  const [location, setLocation] = useState('')
+  const [health, setHealth] = useState('')
+  const [notes, setNotes] = useState('')
+
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+    setMessage('')
+    setError('')
+    setSubmitting(true)
+
+    const newSighting = {
+      observer_name: observerName,
+      sighting_date: date,
+      location_name: location,
+      health_status: health || 'Unknown',
+      notes: notes || null,
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/sightings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSighting),
+      })
+
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`)
+      }
+
+      const result = await response.json()
+      setMessage(`Sighting created with ID ${result.id}. Check the Sightings page to see the new record.`)
+      setObserverName('')
+      setDate('')
+      setLocation('')
+      setHealth('')
+      setNotes('')
+    } catch (err) {
+      console.error(err)
+      setError('Could not create the sighting. Check the API URL and backend.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   return (
-    
     <section>
-    
       <div className="page-intro">
-    
         <h1>Submit a Sighting Report</h1>
-    
-        <p>
-          Fill in the fields below to log a new San Joaquin kit fox sighting.
-          Fields marked * are required.
-    
-        </p>
-    
+        <p>Fill in the fields below to log a new San Joaquin kit fox sighting. Fields marked * are required.</p>
       </div>
 
-      <div className="form-card">
-    
+      <form onSubmit={handleSubmit}>
         <div className="form-grid">
-    
           <div className="field">
-    
-            <label>Date *</label>
-    
-            <input type="date" name="date" />
-    
-          </div>
-
-          <div className="field">
-    
-            <label>Location Description *</label>
-    
+            <label>Observer Name *</label>
             <input
-              
               type="text"
-              name="location"
-              placeholder="e.g. Near Buttonwillow, CA - field road junction"
-            
+              value={observerName}
+              onChange={(e) => setObserverName(e.target.value)}
+              placeholder="Your name"
+              required
             />
-          
           </div>
-
           <div className="field">
-          
+            <label>Date *</label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+            />
+          </div>
+          <div className="field">
+            <label>Location Description *</label>
+            <input
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="e.g. Near Buttonwillow, CA - field road junction"
+              required
+            />
+          </div>
+          <div className="field">
             <label>Latitude</label>
-          
             <span className="hint">Auto-populated from device GPS if available</span>
-          
             <input type="text" name="lat" placeholder="[ GPS coordinate placeholder ]" />
-          
           </div>
-
           <div className="field">
-          
             <label>Longitude</label>
-          
             <span className="hint">Auto-populated from device GPS if available</span>
-          
             <input type="text" name="lon" placeholder="[ GPS coordinate placeholder ]" />
-          
           </div>
-
           <div className="field">
-          
-            <label>Fox Count *</label>
-          
-            <span className="hint">Integer only. Minimum value: 1.</span>
-          
+            <label>Fox Count</label>
+            <span className="hint">Integer only. Minimum value: 1. (Not yet stored in database.)</span>
             <input type="number" name="count" min="1" placeholder="Enter a number" />
-          
           </div>
-
           <div className="field">
-          
-            <label>Health Status *</label>
-          
+            <label>Health Status</label>
             <span className="hint">Select the observed health condition.</span>
-          
-            <select name="health">
-          
+            <select value={health} onChange={(e) => setHealth(e.target.value)}>
               <option value="">Select one...</option>
-          
               <option>Healthy</option>
-          
               <option>Injured</option>
-          
               <option>Unknown</option>
-          
             </select>
-          
           </div>
-
           <div className="field full">
-          
             <label>Photo (Optional)</label>
-          
             <span className="hint">Upload an image or paste a URL to a photo of the sighting.</span>
-          
             <div className="placeholder">
-          
-              [ PHOTO UPLOAD AREA — drag and drop an image here, or click to browse ]
-              <br />— or —<br />
+              [ PHOTO UPLOAD AREA - drag and drop an image here, or click to browse ]
+              <br />- or -<br />
               paste an image URL (placeholder, not active in this prototype)
-          
             </div>
-          
           </div>
-
           <div className="field full">
-          
             <label>Additional Notes (Optional)</label>
-          
             <span className="hint">Describe behavior, habitat, time of day, or other observations.</span>
-          
-            <textarea name="notes" placeholder="Describe what was observed..."></textarea>
-          
+            <textarea
+              name="notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Describe what was observed..."
+            ></textarea>
           </div>
-        
         </div>
 
         <div className="form-actions">
-        
-          <button type="button" className="btn btn-primary">[ SUBMIT ]</button>
-        
+          <button type="submit" className="btn btn-primary" disabled={submitting}>
+            {submitting ? 'Submitting...' : '[ SUBMIT ]'}
+          </button>
           <Link to="/" className="btn">Cancel</Link>
-        
         </div>
+      </form>
 
-        <p className="note form-note">
-        
-          Note: This is a prototype form. Submitting does not save data yet — a later milestone will connect it to the sightings database.
-        
-        </p>
-      
-      </div>
-    
+      {message && <p className="note" style={{ marginTop: '16px' }}>{message}</p>}
+      {error && <p className="note" style={{ marginTop: '16px' }}>{error}</p>}
     </section>
-
   )
-
 }
 
 export default SubmitSighting
