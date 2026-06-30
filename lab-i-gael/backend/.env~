@@ -1,0 +1,5 @@
+PORT=3000
+HOST=127.0.0.1
+STUDENT_NAME=Gael
+PUBLIC_API_URL=https://bender.cs.csubak.edu/carrillo
+

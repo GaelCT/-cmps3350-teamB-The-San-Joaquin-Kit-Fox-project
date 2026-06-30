@@ -1,25 +1,48 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { API_BASE_URL } from '../api.js'
 
-// Hardcoded example data for the prototype (matches the Figma wireframe).
-// A later milestone will replace this with real records from the API.
-const SIGHTINGS = [
-  { id: 1, date: '2025-04-12', location: 'Near Buttonwillow, CA - SR 58 junction', count: 2, health: 'Healthy' },
-  { id: 2, date: '2025-04-09', location: 'Lokern Natural Area, Kern County',       count: 1, health: 'Injured' },
-  { id: 3, date: '2025-04-06', location: 'Wheeler Ridge, I-5 corridor',            count: 3, health: 'Healthy' },
-  { id: 4, date: '2025-03-30', location: 'Corcoran, Kings County - ag field edge',  count: 1, health: 'Unknown' },
-  { id: 5, date: '2025-03-27', location: 'Elk Hills, western Kern County',          count: 2, health: 'Healthy' },
-  { id: 6, date: '2025-03-21', location: 'Lost Hills, north of Taft',               count: 1, health: 'Unknown' },
-]
-
+// Loads kit fox sightings from the database-backed API and renders them
+// with client-side filter + sort controls.
 function Sightings() {
+  const [sightings, setSightings] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   const [health, setHealth] = useState('All')
   const [sort, setSort] = useState('newest')
 
-  // Filter, then sort. Pure UI logic on hardcoded data — no backend.
-  const visible = SIGHTINGS
+  useEffect(() => {
+    async function loadSightings() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/sightings`)
+        if (!response.ok) {
+          throw new Error(`API request failed with status ${response.status}`)
+        }
+        const data = await response.json()
+        // Map API field names into the shape this UI expects.
+        const mapped = data.map((row) => ({
+          id: row.id,
+          date: row.sighting_date,
+          location: row.location_name,
+          count: null, // DB has no fox-count column yet
+          health: row.health_status,
+        }))
+        setSightings(mapped)
+      } catch (err) {
+        console.error(err)
+        setError('Could not load sightings from the API.')
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadSightings()
+  }, [])
+
+  // Filter, then sort. Pure UI logic on the fetched data.
+  const visible = sightings
     .filter((s) => (dateFrom ? s.date >= dateFrom : true))
     .filter((s) => (dateTo ? s.date <= dateTo : true))
     .filter((s) => (health === 'All' ? true : s.health === health))
@@ -34,6 +57,29 @@ function Sightings() {
     setDateTo('')
     setHealth('All')
     setSort('newest')
+  }
+
+  if (loading) {
+    return (
+      <section>
+        <div className="page-intro">
+          <h1>Sighting Reports</h1>
+          <p>Loading sightings from the API...</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section>
+        <div className="page-intro">
+          <h1>Sighting Reports</h1>
+          <p>{error}</p>
+          <p>Check that the backend is running and that the API URL is correct.</p>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -81,7 +127,10 @@ function Sightings() {
         <button className="btn" onClick={clearFilters}>Clear Filters</button>
       </div>
 
-      <p className="count-line">Showing {visible.length} of {SIGHTINGS.length} reports</p>
+      <div className="table-header">
+        <h3>Recorded Sightings</h3>
+        <span>Showing {visible.length} of {sightings.length} reports</span>
+      </div>
 
       <table>
         <thead>
@@ -98,9 +147,13 @@ function Sightings() {
             <tr key={s.id}>
               <td>{s.date}</td>
               <td>{s.location}</td>
-              <td>{s.count}</td>
-              <td><span className="badge">{s.health}</span></td>
-              <td><Link to="/sightings">View Details →</Link></td>
+              <td>{s.count ?? '-'}</td>
+              <td>
+                <span className={`badge badge-${s.health.toLowerCase().replace(/\s+/g, '-')}`}>
+                  {s.health}
+                </span>
+              </td>
+              <td><Link to="/sightings">View Details</Link></td>
             </tr>
           ))}
           {visible.length === 0 && (
@@ -113,7 +166,7 @@ function Sightings() {
         </tbody>
       </table>
 
-      <div style={{ marginTop: '24px' }}>
+      <div className="submit-btn-container">
         <Link to="/submit" className="btn btn-primary">+ Submit a New Sighting</Link>
       </div>
     </section>
