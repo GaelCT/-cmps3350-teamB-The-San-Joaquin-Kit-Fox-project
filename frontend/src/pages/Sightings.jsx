@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import SightingsMap from '../components/SightingsMap'
 import { Link } from 'react-router-dom'
 import { API_BASE_URL } from '../api.js'
 
@@ -33,7 +34,37 @@ function Sightings() {
         setSightings(mapped)
       } catch (err) {
         console.error(err)
-        setError('Could not load sightings from the API.')
+        
+        /* ******************************************************************************************************************************** */
+        // this block is for testing purposes only, to allow the frontend to run without a backend API. Remove it when the backend is ready.
+        setSightings([
+        {
+          id: 1,
+          date: '2026-06-10',
+          location: 'Downtown Bakersfield',
+          count: null,
+          health: 'Healthy',
+        },
+        {
+          id: 2,
+          date: '2026-06-15',
+          location: 'Buttonwillow',
+          count: null,
+          health: 'Unknown',
+        },
+        {
+          id: 3,
+          date: '2026-06-20',
+          location: 'Kern Wildlife Area',
+          count: null,
+          health: 'Injured',
+        },
+      ])
+      setError('')
+        // change setError('') to setError('Failed to load sightings from the API. Please check that the backend is running and that the API URL is correct.') 
+        // when the backend is ready.
+        /* ******************************************************************************************************************************** */
+
       } finally {
         setLoading(false)
       }
@@ -88,6 +119,11 @@ function Sightings() {
         <h1>Sighting Reports</h1>
         <p>Browse all submitted kit fox sighting reports. Use filters and sort controls below.</p>
       </div>
+      <p className="section-label">SECTION: SIGHTINGS MAP</p>
+      <p className="note">
+        View reported kit fox sightings by location. Click a marker to see summary information.
+      </p>
+      <SightingsMap />
 
       <div className="filter-bar">
         <div className="field">

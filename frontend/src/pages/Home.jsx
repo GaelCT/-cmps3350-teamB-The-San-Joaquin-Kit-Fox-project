@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import SightingsMap from '../components/SightingsMap'
 import heroImage from '../assets/full banner kit fox.jpeg'
 
 // Placeholder preview cards for the prototype. A later milestone
@@ -47,10 +48,8 @@ function Home() {
     </div>
 
       <p className="section-label">SECTION: MAP PREVIEW</p>
-      <p className="note">↘ Map will be built by Person C (Emilio) using Leaflet and OpenStreetMap — placeholder only</p>
-      <div className="placeholder map-placeholder">
-        [ MAP PLACEHOLDER — Sighting locations displayed as pins on a regional map of California's Central Valley ]
-      </div>
+      <p className="note"> Browse reported San Joaquin kit fox sightings by location. Click a marker to view summary information.</p>
+      <SightingsMap />
 
       <p className="section-label">SECTION: QUICK STATS</p>
       <div className="stats">

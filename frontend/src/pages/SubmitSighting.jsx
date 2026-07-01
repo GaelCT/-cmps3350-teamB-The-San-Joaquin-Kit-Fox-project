@@ -30,6 +30,8 @@ function SubmitSighting() {
       observer_name: observerName,
       sighting_date: date,
       location_name: location,
+      latitude: mapLocation.latitude || null,
+      longitude: mapLocation.longitude || null,
       health_status: health || 'Unknown',
       notes: notes || null,
     }
@@ -52,6 +54,10 @@ function SubmitSighting() {
       setLocation('')
       setHealth('')
       setNotes('')
+      setMapLocation({
+        latitude: '',
+        longitude: '',
+      })
     } catch (err) {
       console.error(err)
       setError('Could not create the sighting. Check the API URL and backend.')
