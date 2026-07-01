@@ -2,6 +2,7 @@ import { Link, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import SubmitSighting from './pages/SubmitSighting.jsx'
 import Sightings from './pages/Sightings.jsx'
+import SightingDetails from './pages/SightingDetails.jsx'
 import About from './pages/About.jsx'
 import './App.css'
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/submit" element={<SubmitSighting />} />
           <Route path="/sightings" element={<Sightings />} />
+          <Route path="/sightings/:id" element={<SightingDetails />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </main>

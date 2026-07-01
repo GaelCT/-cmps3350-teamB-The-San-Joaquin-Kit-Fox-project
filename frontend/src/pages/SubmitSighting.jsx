@@ -8,6 +8,7 @@ function SubmitSighting() {
   const [observerName, setObserverName] = useState('')
   const [date, setDate] = useState('')
   const [location, setLocation] = useState('')
+  const [foxCount, setFoxCount] = useState('')
 
   const [mapLocation, setMapLocation] = useState({
     latitude: '',
@@ -32,6 +33,7 @@ function SubmitSighting() {
       location_name: location,
       latitude: mapLocation.latitude || null,
       longitude: mapLocation.longitude || null,
+      fox_count: foxCount ? Number(foxCount) : null,
       health_status: health || 'Unknown',
       notes: notes || null,
     }
@@ -143,7 +145,7 @@ function SubmitSighting() {
           <div className="field">
             <label>Fox Count</label>
             <span className="hint">Integer only. Minimum value: 1. (Not yet stored in database.)</span>
-            <input type="number" name="count" min="1" placeholder="Enter a number" />
+            <input type="number" name="count" min="1" value={foxCount} onChange={(event) => setFoxCount(event.target.value)} placeholder="Enter a number" />
           </div>
           <div className="field">
             <label>Health Status</label>

@@ -1,10 +1,40 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import SightingsMap from '../components/SightingsMap'
 import { Link } from 'react-router-dom'
 import { API_BASE_URL } from '../api.js'
 
-// Loads kit fox sightings from the database-backed API and renders them
-// with client-side filter + sort controls.
+function toNumberOrNull(value) {
+  if (value === null || value === undefined || value === '') {
+    return null
+  }
+
+  const number = Number(value)
+  return Number.isFinite(number) ? number : null
+}
+
+function normalizeSighting(row) {
+  return {
+    id: row.id,
+    observerName: row.observer_name || 'Unknown observer',
+    date: row.sighting_date || '',
+    location: row.location_name || 'Unknown location',
+    latitude: toNumberOrNull(row.latitude),
+    longitude: toNumberOrNull(row.longitude),
+    count: row.fox_count ?? row.count ?? null,
+    health: row.health_status || 'Unknown',
+    notes: row.notes || '',
+  }
+}
+
+function makeBadgeClass(value) {
+  const safeValue = String(value || 'unknown')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+  return `badge badge-${safeValue || 'unknown'}`
+}
+
 function Sightings() {
   const [sightings, setSightings] = useState([])
   const [loading, setLoading] = useState(true)
@@ -16,72 +46,71 @@ function Sightings() {
   const [sort, setSort] = useState('newest')
 
   useEffect(() => {
+    let ignore = false
+
     async function loadSightings() {
       try {
         const response = await fetch(`${API_BASE_URL}/sightings`)
+
         if (!response.ok) {
           throw new Error(`API request failed with status ${response.status}`)
         }
+
         const data = await response.json()
-        // Map API field names into the shape this UI expects.
-        const mapped = data.map((row) => ({
-          id: row.id,
-          date: row.sighting_date,
-          location: row.location_name,
-          count: null, // DB has no fox-count column yet
-          health: row.health_status,
-        }))
-        setSightings(mapped)
+
+        if (!Array.isArray(data)) {
+          throw new Error('API did not return an array of sightings')
+        }
+
+        if (!ignore) {
+          setSightings(data.map(normalizeSighting))
+          setError('')
+        }
       } catch (err) {
         console.error(err)
-        
-        /* ******************************************************************************************************************************** */
-        // this block is for testing purposes only, to allow the frontend to run without a backend API. Remove it when the backend is ready.
-        setSightings([
-        {
-          id: 1,
-          date: '2026-06-10',
-          location: 'Downtown Bakersfield',
-          count: null,
-          health: 'Healthy',
-        },
-        {
-          id: 2,
-          date: '2026-06-15',
-          location: 'Buttonwillow',
-          count: null,
-          health: 'Unknown',
-        },
-        {
-          id: 3,
-          date: '2026-06-20',
-          location: 'Kern Wildlife Area',
-          count: null,
-          health: 'Injured',
-        },
-      ])
-      setError('')
-        // change setError('') to setError('Failed to load sightings from the API. Please check that the backend is running and that the API URL is correct.') 
-        // when the backend is ready.
-        /* ******************************************************************************************************************************** */
 
+        if (!ignore) {
+          setError(
+            'Failed to load sightings from the API. Please check that the backend is running and that the API URL is correct.'
+          )
+        }
       } finally {
-        setLoading(false)
+        if (!ignore) {
+          setLoading(false)
+        }
       }
     }
+
     loadSightings()
+
+    return () => {
+      ignore = true
+    }
   }, [])
 
-  // Filter, then sort. Pure UI logic on the fetched data.
-  const visible = sightings
-    .filter((s) => (dateFrom ? s.date >= dateFrom : true))
-    .filter((s) => (dateTo ? s.date <= dateTo : true))
-    .filter((s) => (health === 'All' ? true : s.health === health))
-    .sort((a, b) =>
-      sort === 'newest'
-        ? b.date.localeCompare(a.date)
-        : a.date.localeCompare(b.date)
-    )
+  const healthOptions = useMemo(() => {
+    const values = sightings
+      .map((sighting) => sighting.health)
+      .filter(Boolean)
+
+    return ['All', ...Array.from(new Set(values))]
+  }, [sightings])
+
+  const visible = useMemo(() => {
+    return sightings
+      .filter((s) => (dateFrom ? s.date && s.date >= dateFrom : true))
+      .filter((s) => (dateTo ? s.date && s.date <= dateTo : true))
+      .filter((s) => (health === 'All' ? true : s.health === health))
+      .slice()
+      .sort((a, b) => {
+        const aDate = a.date || ''
+        const bDate = b.date || ''
+
+        return sort === 'newest'
+          ? bDate.localeCompare(aDate)
+          : aDate.localeCompare(bDate)
+      })
+  }, [sightings, dateFrom, dateTo, health, sort])
 
   function clearFilters() {
     setDateFrom('')
@@ -117,42 +146,59 @@ function Sightings() {
     <section>
       <div className="page-intro">
         <h1>Sighting Reports</h1>
-        <p>Browse all submitted kit fox sighting reports. Use filters and sort controls below.</p>
+        <p>
+          Browse all submitted kit fox sighting reports. Use filters and sort controls below.
+        </p>
       </div>
+
       <p className="section-label">SECTION: SIGHTINGS MAP</p>
       <p className="note">
         View reported kit fox sightings by location. Click a marker to see summary information.
       </p>
-      <SightingsMap />
+
+      <SightingsMap sightings={visible} />
 
       <div className="filter-bar">
         <div className="field">
           <label>DATE FROM</label>
-          <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+          />
         </div>
+
         <div className="field">
           <label>DATE TO</label>
-          <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+          <input
+            type="date"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+          />
         </div>
+
         <div className="field">
           <label>HEALTH STATUS</label>
           <select value={health} onChange={(e) => setHealth(e.target.value)}>
-            <option>All</option>
-            <option>Healthy</option>
-            <option>Injured</option>
-            <option>Unknown</option>
+            {healthOptions.map((option) => (
+              <option key={option}>{option}</option>
+            ))}
           </select>
         </div>
+
         <div className="field">
           <label>SORT ORDER</label>
           <div className="sort-group">
             <button
+              type="button"
               className={`sort-btn ${sort === 'newest' ? 'active' : ''}`}
               onClick={() => setSort('newest')}
             >
               Newest First
             </button>
+
             <button
+              type="button"
               className={`sort-btn ${sort === 'oldest' ? 'active' : ''}`}
               onClick={() => setSort('oldest')}
             >
@@ -160,12 +206,17 @@ function Sightings() {
             </button>
           </div>
         </div>
-        <button className="btn" onClick={clearFilters}>Clear Filters</button>
+
+        <button type="button" className="btn" onClick={clearFilters}>
+          Clear Filters
+        </button>
       </div>
 
       <div className="table-header">
         <h3>Recorded Sightings</h3>
-        <span>Showing {visible.length} of {sightings.length} reports</span>
+        <span>
+          Showing {visible.length} of {sightings.length} reports
+        </span>
       </div>
 
       <table>
@@ -173,28 +224,49 @@ function Sightings() {
           <tr>
             <th>DATE</th>
             <th>LOCATION</th>
+            <th>COORDINATES</th>
             <th>FOX COUNT</th>
             <th>HEALTH STATUS</th>
             <th>ACTION</th>
           </tr>
         </thead>
+
         <tbody>
-          {visible.map((s) => (
-            <tr key={s.id}>
-              <td>{s.date}</td>
-              <td>{s.location}</td>
-              <td>{s.count ?? '-'}</td>
-              <td>
-                <span className={`badge badge-${s.health.toLowerCase().replace(/\s+/g, '-')}`}>
-                  {s.health}
-                </span>
-              </td>
-              <td><Link to="/sightings">View Details</Link></td>
-            </tr>
-          ))}
+          {visible.map((s) => {
+            const hasCoordinates = s.latitude !== null && s.longitude !== null
+
+            return (
+              <tr key={s.id} id={`sighting-${s.id}`}>
+                <td>{s.date || '-'}</td>
+                <td>{s.location}</td>
+                <td>
+                  {hasCoordinates
+                    ? `${s.latitude.toFixed(5)}, ${s.longitude.toFixed(5)}`
+                    : '-'}
+                </td>
+                <td>{s.count ?? '-'}</td>
+                <td>
+                  <span className={makeBadgeClass(s.health)}>
+                    {s.health}
+                  </span>
+                </td>
+                <td>
+                  <Link to={`/sightings/${s.id}`}>View Details</Link>
+                </td>
+              </tr>
+            )
+          })}
+
           {visible.length === 0 && (
             <tr>
-              <td colSpan="5" style={{ textAlign: 'center', color: 'var(--muted)', padding: '32px' }}>
+              <td
+                colSpan="6"
+                style={{
+                  textAlign: 'center',
+                  color: 'var(--muted)',
+                  padding: '32px',
+                }}
+              >
                 No sightings match the current filters.
               </td>
             </tr>
@@ -203,7 +275,9 @@ function Sightings() {
       </table>
 
       <div className="submit-btn-container">
-        <Link to="/submit" className="btn btn-primary">+ Submit a New Sighting</Link>
+        <Link to="/submit" className="btn btn-primary">
+          + Submit a New Sighting
+        </Link>
       </div>
     </section>
   )
