@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
+import helmet from "helmet";
 import { pool } from "./db.js";
 
 dotenv.config();
@@ -10,6 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "127.0.0.1";
 
+app.use(helmet());
 app.use(morgan("combined"));
 app.use(express.json());
 
