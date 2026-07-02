@@ -1,0 +1,21 @@
+{
+  "name": "kitfox-backend-sample",
+  "version": "1.0.0",
+  "description": "Sample Node/Express/MySQL backend for the Kit Fox Tracker project.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "check": "node --check server.js && node --check db.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.0.0",
+    "express": "^5.0.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.11.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

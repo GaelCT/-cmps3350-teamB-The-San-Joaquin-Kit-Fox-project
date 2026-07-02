@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import MapPicker from '../components/MapPicker'
 import { Link } from 'react-router-dom'
 import { API_BASE_URL } from '../api.js'
 
@@ -7,6 +8,12 @@ function SubmitSighting() {
   const [observerName, setObserverName] = useState('')
   const [date, setDate] = useState('')
   const [location, setLocation] = useState('')
+  const [foxCount, setFoxCount] = useState('')
+
+  const [mapLocation, setMapLocation] = useState({
+    latitude: '',
+    longitude: '',
+  })
   const [health, setHealth] = useState('')
   const [notes, setNotes] = useState('')
 
@@ -24,6 +31,9 @@ function SubmitSighting() {
       observer_name: observerName,
       sighting_date: date,
       location_name: location,
+      latitude: mapLocation.latitude || null,
+      longitude: mapLocation.longitude || null,
+      fox_count: foxCount ? Number(foxCount) : null,
       health_status: health || 'Unknown',
       notes: notes || null,
     }
@@ -46,6 +56,10 @@ function SubmitSighting() {
       setLocation('')
       setHealth('')
       setNotes('')
+      setMapLocation({
+        latitude: '',
+        longitude: '',
+      })
     } catch (err) {
       console.error(err)
       setError('Could not create the sighting. Check the API URL and backend.')
@@ -82,7 +96,7 @@ function SubmitSighting() {
               required
             />
           </div>
-          <div className="field">
+          <div className="field full">
             <label>Location Description *</label>
             <input
               type="text"
@@ -95,17 +109,43 @@ function SubmitSighting() {
           <div className="field">
             <label>Latitude</label>
             <span className="hint">Auto-populated from device GPS if available</span>
-            <input type="text" name="lat" placeholder="[ GPS coordinate placeholder ]" />
+            <input
+            type="text"
+            name="lat"
+            placeholder="[ GPS coordinate placeholder ]"
+            value={mapLocation.latitude}
+            onChange={(event) =>
+              setMapLocation({ ...mapLocation, latitude: event.target.value })
+            }
+          />
           </div>
           <div className="field">
             <label>Longitude</label>
             <span className="hint">Auto-populated from device GPS if available</span>
-            <input type="text" name="lon" placeholder="[ GPS coordinate placeholder ]" />
+            <input
+            type="text"
+            name="lon"
+            placeholder="[ GPS coordinate placeholder ]"
+            value={mapLocation.longitude}
+            onChange={(event) =>
+              setMapLocation({ ...mapLocation, longitude: event.target.value })
+            }
+          />
+        </div>
+
+        <div className="field full">
+          <label>Select Location on Map</label>
+          <span className="hint">Click the map to drop a marker and fill in latitude/longitude.</span>
+          <MapPicker
+            latitude={mapLocation.latitude}
+            longitude={mapLocation.longitude}
+            onSelectLocation={setMapLocation}
+          />
           </div>
           <div className="field">
             <label>Fox Count</label>
             <span className="hint">Integer only. Minimum value: 1. (Not yet stored in database.)</span>
-            <input type="number" name="count" min="1" placeholder="Enter a number" />
+            <input type="number" name="count" min="1" value={foxCount} onChange={(event) => setFoxCount(event.target.value)} placeholder="Enter a number" />
           </div>
           <div className="field">
             <label>Health Status</label>
