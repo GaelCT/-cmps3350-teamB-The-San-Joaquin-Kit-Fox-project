@@ -10,6 +10,7 @@
     "check": "node --check server.js && node --check db.js"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^17.0.0",
     "express": "^5.0.0",
     "morgan": "^1.10.0",

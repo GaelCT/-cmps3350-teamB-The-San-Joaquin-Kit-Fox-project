@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import { pool } from "./db.js";
-import morgan from "morgan";
 
 dotenv.config();
 
@@ -10,122 +10,25 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "127.0.0.1";
 
-const SIGHTING_FIELDS = `
-  id,
-  observer_name,
-  sighting_date,
-  location_name,
-  latitude,
-  longitude,
-  fox_count,
-  health_status,
-  notes,
-  created_at,
-  updated_at
-`;
-
-app.use(morgan("combined"));
 app.use(express.json());
+app.use(cors({
+        origin: [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://bender.cs.csubak.edu",
+        ]
+}));
 
 function isValidId(value) {
   const id = Number(value);
   return Number.isInteger(id) && id > 0;
 }
 
-function createHttpError(statusCode, message) {
-  const error = new Error(message);
-  error.statusCode = statusCode;
-  return error;
-}
-
-function requiredText(body, fieldName) {
-  const value = body[fieldName];
-
-  if (typeof value !== "string" || value.trim() === "") {
-    throw createHttpError(400, `${fieldName} is required`);
-  }
-
-  return value.trim();
-}
-
-function optionalText(value, defaultValue = null) {
-  if (value === undefined || value === null || String(value).trim() === "") {
-    return defaultValue;
-  }
-
-  return String(value).trim();
-}
-
-function optionalNumberInRange(value, fieldName, min, max) {
-  if (value === undefined || value === null || value === "") {
-    return null;
-  }
-
-  const number = Number(value);
-
-  if (!Number.isFinite(number) || number < min || number > max) {
-    throw createHttpError(
-      400,
-      `${fieldName} must be a number between ${min} and ${max}`
-    );
-  }
-
-  return number;
-}
-
-function optionalPositiveInteger(value, fieldName) {
-  if (value === undefined || value === null || value === "") {
-    return null;
-  }
-
-  const number = Number(value);
-
-  if (!Number.isInteger(number) || number < 1) {
-    throw createHttpError(400, `${fieldName} must be a positive integer`);
-  }
-
-  return number;
-}
-
-function readSightingBody(body) {
-  return {
-    observer_name: requiredText(body, "observer_name"),
-    sighting_date: requiredText(body, "sighting_date"),
-    location_name: requiredText(body, "location_name"),
-    latitude: optionalNumberInRange(body.latitude, "latitude", -90, 90),
-    longitude: optionalNumberInRange(body.longitude, "longitude", -180, 180),
-    fox_count: optionalPositiveInteger(body.fox_count, "fox_count"),
-    health_status: optionalText(body.health_status, "Unknown"),
-    notes: optionalText(body.notes, null)
-  };
-}
-
-function sendError(res, error, fallbackMessage) {
-  if (error.statusCode) {
-    return res.status(error.statusCode).json({ error: error.message });
-  }
-
-  console.error(fallbackMessage, error);
-  return res.status(500).json({ error: fallbackMessage });
-}
-
-async function getSightingById(id) {
-  const [rows] = await pool.query(
-    `SELECT ${SIGHTING_FIELDS}
-     FROM sightings
-     WHERE id = ?`,
-    [id]
-  );
-
-  return rows[0] || null;
-}
-
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
-    message: "Kit Fox Tracker backend is running",
-    student: process.env.STUDENT_NAME || "Unknown student",
-    public_api_url: process.env.PUBLIC_API_URL || null
+    message: "Lab E3 backend is running",
+    student: process.env.STUDENT_NAME || "Unknown student"
   });
 });
 
@@ -150,14 +53,15 @@ app.get("/db-test", async (req, res) => {
 app.get("/sightings", async (req, res) => {
   try {
     const [rows] = await pool.query(
-      `SELECT ${SIGHTING_FIELDS}
+      `SELECT id, observer_name, sighting_date, location_name, latitude, longitude, fox_count, health_status, notes, created_at, updated_at
        FROM sightings
        ORDER BY id`
     );
 
     res.json(rows);
   } catch (error) {
-    sendError(res, error, "Failed to fetch sightings");
+    console.error("Failed to fetch sightings:", error);
+    res.status(500).json({ error: "Failed to fetch sightings" });
   }
 });
 
@@ -169,56 +73,57 @@ app.get("/sightings/:id", async (req, res) => {
       return res.status(400).json({ error: "Invalid sighting ID" });
     }
 
-    const sighting = await getSightingById(id);
+    const [rows] = await pool.query(
+      `SELECT id, observer_name, sighting_date, location_name, latitude, longitude, fox_count, health_status, notes, created_at, updated_at
+       FROM sightings
+       WHERE id = ?`,
+      [id]
+    );
 
-    if (!sighting) {
+    if (rows.length === 0) {
       return res.status(404).json({ error: "Sighting not found" });
     }
 
-    res.json(sighting);
+    res.json(rows[0]);
   } catch (error) {
-    sendError(res, error, "Failed to fetch sighting");
+    console.error("Failed to fetch sighting:", error);
+    res.status(500).json({ error: "Failed to fetch sighting" });
   }
 });
 
 app.post("/sightings", async (req, res) => {
   try {
-    const sighting = readSightingBody(req.body);
+    const {
+      observer_name,
+      sighting_date,
+      location_name,
+        latitude = null,
+        longitude = null,
+        fox_count = null,
+      health_status = "Unknown",
+      notes = null
+    } = req.body;
+
+    if (!observer_name || !sighting_date || !location_name) {
+      return res.status(400).json({
+        error: "observer_name, sighting_date, and location_name are required"
+      });
+    }
 
     const [result] = await pool.execute(
       `INSERT INTO sightings
-       (
-         observer_name,
-         sighting_date,
-         location_name,
-         latitude,
-         longitude,
-         fox_count,
-         health_status,
-         notes
-       )
+       (observer_name, sighting_date, location_name, latitude, longitude, fox_count, health_status, notes)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        sighting.observer_name,
-        sighting.sighting_date,
-        sighting.location_name,
-        sighting.latitude,
-        sighting.longitude,
-        sighting.fox_count,
-        sighting.health_status,
-        sighting.notes
-      ]
+      [observer_name, sighting_date, location_name, latitude, longitude, fox_count, health_status, notes]
     );
-
-    const createdSighting = await getSightingById(result.insertId);
 
     res.status(201).json({
       message: "Sighting created",
-      id: result.insertId,
-      sighting: createdSighting
+      id: result.insertId
     });
   } catch (error) {
-    sendError(res, error, "Failed to create sighting");
+    console.error("Failed to create sighting:", error);
+    res.status(500).json({ error: "Failed to create sighting" });
   }
 });
 
@@ -230,44 +135,42 @@ app.put("/sightings/:id", async (req, res) => {
       return res.status(400).json({ error: "Invalid sighting ID" });
     }
 
-    const sighting = readSightingBody(req.body);
+    const {
+      observer_name,
+      sighting_date,
+      location_name,
+        latitude = null,
+        longitude = null,
+        fox_count = null,
+      health_status = "Unknown",
+      notes = null
+    } = req.body;
+
+    if (!observer_name || !sighting_date || !location_name) {
+      return res.status(400).json({
+        error: "observer_name, sighting_date, and location_name are required"
+      });
+    }
 
     const [result] = await pool.execute(
       `UPDATE sightings
        SET observer_name = ?,
            sighting_date = ?,
            location_name = ?,
-           latitude = ?,
-           longitude = ?,
-           fox_count = ?,
            health_status = ?,
            notes = ?
        WHERE id = ?`,
-      [
-        sighting.observer_name,
-        sighting.sighting_date,
-        sighting.location_name,
-        sighting.latitude,
-        sighting.longitude,
-        sighting.fox_count,
-        sighting.health_status,
-        sighting.notes,
-        id
-      ]
+      [observer_name, sighting_date, location_name, health_status, notes, id]
     );
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Sighting not found" });
     }
 
-    const updatedSighting = await getSightingById(id);
-
-    res.json({
-      message: "Sighting updated",
-      sighting: updatedSighting
-    });
+    res.json({ message: "Sighting updated" });
   } catch (error) {
-    sendError(res, error, "Failed to update sighting");
+    console.error("Failed to update sighting:", error);
+    res.status(500).json({ error: "Failed to update sighting" });
   }
 });
 
@@ -290,7 +193,8 @@ app.delete("/sightings/:id", async (req, res) => {
 
     res.json({ message: "Sighting deleted" });
   } catch (error) {
-    sendError(res, error, "Failed to delete sighting");
+    console.error("Failed to delete sighting:", error);
+    res.status(500).json({ error: "Failed to delete sighting" });
   }
 });
 
