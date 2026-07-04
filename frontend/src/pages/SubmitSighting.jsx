@@ -21,6 +21,18 @@ function SubmitSighting() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  const resetForm = () => {
+    setObserverName('')
+    setDate('')
+    setLocation('')
+    setHealth('')
+    setNotes('')
+    setMapLocation({
+      latitude: '',
+      longitude: '',
+    })
+  }
+
   async function handleSubmit(event) {
     event.preventDefault()
     setMessage('')
@@ -50,16 +62,9 @@ function SubmitSighting() {
       }
 
       const result = await response.json()
-      setMessage(`Sighting created with ID ${result.id}. Check the Sightings page to see the new record.`)
-      setObserverName('')
-      setDate('')
-      setLocation('')
-      setHealth('')
-      setNotes('')
-      setMapLocation({
-        latitude: '',
-        longitude: '',
-      })
+        setMessage(`Sighting created with ID ${result.id}. Check the Sightings page to see the new record.`)
+        resetForm()
+
     } catch (err) {
       console.error(err)
       setError('Could not create the sighting. Check the API URL and backend.')
