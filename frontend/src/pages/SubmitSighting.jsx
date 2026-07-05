@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import MapPicker from '../components/MapPicker'
 import { Link } from 'react-router-dom'
@@ -144,7 +145,7 @@ function SubmitSighting() {
           </div>
           <div className="field">
             <label>Fox Count</label>
-            <span className="hint">Integer only. Minimum value: 1. (Not yet stored in database.)</span>
+            <span className="hint">Enter the number of foxes observed.</span>
             <input type="number" name="count" min="1" value={foxCount} onChange={(event) => setFoxCount(event.target.value)} placeholder="Enter a number" />
           </div>
           <div className="field">

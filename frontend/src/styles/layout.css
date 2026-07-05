@@ -355,7 +355,7 @@ th{
 
 .field label {
   font-weight: 700;
-  color: var(--color-text-dark);
+  color: var(--color-text-light);
 }
 
 .field small {
