@@ -2,31 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { API_BASE_URL } from '../api.js'
 import SightingsMap from '../components/SightingsMap.jsx'
-
-function toNumberOrNull(value) {
-  if (value === null || value === undefined || value === '') {
-    return null
-  }
-
-  const number = Number(value)
-  return Number.isFinite(number) ? number : null
-}
-
-function normalizeSighting(row) {
-  return {
-    id: row.id,
-    observerName: row.observer_name || 'Unknown observer',
-    date: row.sighting_date || '',
-    location: row.location_name || 'Unknown location',
-    latitude: toNumberOrNull(row.latitude),
-    longitude: toNumberOrNull(row.longitude),
-    count: row.fox_count ?? row.count ?? null,
-    health: row.health_status || 'Unknown',
-    notes: row.notes || '',
-    createdAt: row.created_at || '',
-    updatedAt: row.updated_at || '',
-  }
-}
+import { normalizeSighting } from '../utils/sightingUtils.js'
 
 function SightingDetails() {
   const { id } = useParams()
