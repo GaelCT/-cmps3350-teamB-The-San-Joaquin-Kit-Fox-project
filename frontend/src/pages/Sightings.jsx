@@ -2,38 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import SightingsMap from '../components/SightingsMap'
 import { Link } from 'react-router-dom'
 import { API_BASE_URL } from '../api.js'
-
-function toNumberOrNull(value) {
-  if (value === null || value === undefined || value === '') {
-    return null
-  }
-
-  const number = Number(value)
-  return Number.isFinite(number) ? number : null
-}
-
-function normalizeSighting(row) {
-  return {
-    id: row.id,
-    observerName: row.observer_name || 'Unknown observer',
-    date: row.sighting_date || '',
-    location: row.location_name || 'Unknown location',
-    latitude: toNumberOrNull(row.latitude),
-    longitude: toNumberOrNull(row.longitude),
-    count: row.fox_count ?? row.count ?? null,
-    health: row.health_status || 'Unknown',
-    notes: row.notes || '',
-  }
-}
-
-function makeBadgeClass(value) {
-  const safeValue = String(value || 'unknown')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-
-  return `badge badge-${safeValue || 'unknown'}`
-}
+import { normalizeSighting, makeBadgeClass } from '../utils/sightingUtils.js'
 
 function Sightings() {
   const [sightings, setSightings] = useState([])
