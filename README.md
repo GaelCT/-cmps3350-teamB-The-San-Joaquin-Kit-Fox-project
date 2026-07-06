@@ -89,14 +89,11 @@ Important fields:
 
 | Planned Feature or User Story | Status | Evidence | Notes |
 | --- | --- | --- | --- |
-| User can view sighting records | Yes | Deployed Sightings page; `GET /sightings` | Data loads from the carrillo backend/database |
+| User can view sighting records | Yes | Deployed Sightings page; Demo Video timestamp 1.55 | Data loads from the carrillo backend/database |
 | User can view a single sighting's details | Yes | Sighting Details page; `GET /sightings/:id` | Reached via the Sightings list |
-| User can submit a kit fox sighting | Yes / Partial [VERIFY] | Submit page; `POST /sightings` | Backend validates required fields and ranges |
-| User can update an existing sighting | Partial | `PUT /sightings/:id` (curl evidence, Milestone 3) | Route works; no frontend edit UI |
+| User can submit a kit fox sighting | Yes | Submit page; Demo Video timestamp 0.45 | Backend validates required fields and ranges |
+| User can update an existing sighting | Partial | `PUT /sightings/:id` | Route works; no frontend edit UI |
 | User can delete a sighting | Partial | `DELETE /sightings/:id` | Route works; no frontend delete UI |
-| Sightings shown on a map | [VERIFY] | [screenshot / demo timestamp] | Emilio's Leaflet/OpenStreetMap work |
-| Backend request logging and security headers | Yes | Lab I PR; PM2 logs; `curl -i` header comparison | Morgan + Helmet |
-| Backend error handling refactor | Yes | Lab H PR (`sendServerError` / `sendError` helper) | Removed duplicated try/catch handling |
 
 ## How to Run or Redeploy
 
