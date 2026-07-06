@@ -1,0 +1,203 @@
+/* ===== Header / Nav ===== */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--line-strong);
+  padding: 16px 0;
+  margin-bottom: 24px;
+}
+
+header h1 {
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin: 0;
+}
+header nav { display: flex; gap: 24px; }
+header nav a {
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 14px;
+}
+header nav a:hover { text-decoration: underline; }
+
+main {
+  padding-top: 30px;
+  padding-bottom: 60px;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 14px;
+  padding: 12px 20px;
+  border: 1px solid var(--line-strong);
+  background: #7ea172;
+  color: white;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn:hover { opacity: 0.85; }
+
+/* ===== Page intro ===== */
+.page-intro {
+  background: var(--color-bg-light) !important;
+  border-radius: 24px;
+  padding: 40px;
+}
+
+.page-intro h1,
+.page-intro h2 {
+  color: #2b241f;
+}
+
+.page-intro p {
+  color: #5a5149 !important;
+}
+
+/* ===== Sections ===== */
+.section-label {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #7ea172;
+  border-left: 5px solid #7ea172;
+  padding-left: 12px;
+  margin: 40px 0 16px;
+  text-transform: uppercase;
+}
+
+.note {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+/* ===== Placeholder boxes ===== */
+.placeholder {
+  border: 2px dashed var(--line);
+  background: var(--fill);
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+.map-placeholder { min-height: 260px; display: flex; align-items: center; justify-content: center; }
+
+/* ===== Quick stats ===== */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.stat {
+  border: 2px dashed var(--line);
+  padding: 28px 12px;
+  text-align: center;
+  font-size: 13px;
+}
+@media (max-width: 800px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+/* ===== Cards (recent sightings) ===== */
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.card {
+  border: 1px solid var(--line-strong);
+  padding: 16px;
+  font-size: 13px;
+}
+.card .row { margin-bottom: 6px; }
+.card .label { color: var(--muted); display: inline-block; width: 70px; }
+@media (max-width: 800px) { .cards { grid-template-columns: 1fr; } }
+
+/* ===== Filter bar ===== */
+.filter-bar {
+  background: var(--fill);
+  border: 1px solid var(--line);
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.filter-bar .field { display: flex; flex-direction: column; gap: 4px; }
+.filter-bar label { font-size: 11px; letter-spacing: 1px; color: var(--muted); }
+.filter-bar input, .filter-bar select {
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+.sort-group {
+  display: flex;
+  gap: 12px;
+}
+
+.sort-btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 7px 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+}
+.sort-btn.active { background: var(--ink); color: var(--paper); }
+
+/* ===== Table ===== */
+.count-line { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); }
+thead th {
+  background: var(--fill-head);
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  background: var(--fill);
+}
+
+/* ===== Forms ===== */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 760px; }
+.form-grid .full { grid-column: 1 / -1; }
+.form-grid .field { display: flex; flex-direction: column; gap: 6px; }
+.form-grid label { font-size: 13px; font-weight: 700; }
+.form-grid .hint { font-size: 11px; color: var(--muted); }
+.form-grid input, .form-grid select, .form-grid textarea {
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+}
+.form-grid textarea { min-height: 100px; resize: vertical; }
+.form-actions { display: flex; gap: 12px; margin-top: 20px; }
+@media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+
+/* ===== Leaflet Map ===== */
+
+.map-wrapper {
+  margin-top: 16px;
+  border: 2px solid var(--line-strong);
+}
+
+.leaflet-map {
+  width: 100%;
+  height: 400px;
+}
+
+.leaflet-container {
+  font-family: var(--mono);
+}

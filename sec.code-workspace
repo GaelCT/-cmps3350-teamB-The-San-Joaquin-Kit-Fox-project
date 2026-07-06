@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"name": "SSH FS - odin",
+			"uri": "ssh://sec/home/stu/sec"
+		},
+		{
+			"name": "SSH FS - Odin",
+			"uri": "ssh://odin/home/stu/gcarrillotor"
+		}
+	]
+}
